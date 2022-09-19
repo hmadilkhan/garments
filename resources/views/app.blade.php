@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="{{asset('dist/css/app.css')}}" />
-    <script src="https://unpkg.com/feather-icons"></script>
+    {{-- <script src="https://unpkg.com/feather-icons"></script> --}}
     <script rel="stylesheet" href="{{asset('dist/js/app.js')}}"></script>
 
     <!-- Scripts -->

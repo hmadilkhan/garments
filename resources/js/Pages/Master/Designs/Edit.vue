@@ -8,24 +8,18 @@ import { useForm, Link } from "@inertiajs/inertia-vue3";
 const props = defineProps(["design"]);
 
 const form = useForm({
+  _method: "put",
   code: props.design.code,
   qty: props.design.qty,
   price: props.design.price,
   size: props.design.size,
   image: "",
+  prevImage: props.design.image,
 });
-
-function submit() {
-  // form.post(route('design.update',props.design.id,{ _method: 'put'}))
-  Inertia.post(route('design.update',props.design.id), {
-    _method: "put",
-    data: form,
-  });
-}
 </script>
-            
+
     <template>
-  <Head title="Add New Design" />
+  <Head title="Edit New Design" />
 
   <AuthenticatedLayout>
     <div class="py-6">
@@ -45,15 +39,11 @@ function submit() {
             px-5
             py-2.5
             mr-2
-            mb-2
-            dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800
-          "
-          >Back to Design</Link
-        >
+            mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Back to Design</Link>
         <div class="overflow-hidden shadow-sm sm:rounded-lg bg-white">
           <div class="p-6">
             <form
-              @submit.prevent="submit"
+               @submit.prevent="form.post(route('design.update',props.design.id), { onSuccess: () => form.reset() })"
               class="w-full border-b border-gray-200"
               enctype="multipart/form-data"
             >
@@ -263,7 +253,7 @@ function submit() {
                   />
                 </div>
               </div>
-              <PrimaryButton class="mt-4 float-right mb-4">Save</PrimaryButton>
+              <PrimaryButton type="submit" class="mt-4 float-right mb-4">Save</PrimaryButton>
             </form>
           </div>
         </div>
@@ -271,4 +261,3 @@ function submit() {
     </div>
   </AuthenticatedLayout>
 </template>
-          

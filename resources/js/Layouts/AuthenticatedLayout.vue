@@ -85,29 +85,29 @@ const showingNavigationDropdown = ref(false);
                       Designs
                     </DropdownLink>
                     <DropdownLink
-                      :href="route('logout')"
-                      method="post"
+                      :href="route('fabric-type.index')"
+                      method="get"
                       as="button"
                     >
                       Fabric Type
                     </DropdownLink>
                     <DropdownLink
-                      :href="route('logout')"
-                      method="post"
+                      :href="route('unit.index')"
+                      method="get"
                       as="button"
                     >
                       Units
                     </DropdownLink>
                     <DropdownLink
-                      :href="route('logout')"
-                      method="post"
+                      :href="route('dimension.index')"
+                      method="get"
                       as="button"
                     >
                       Dimensions
                     </DropdownLink>
                     <DropdownLink
-                      :href="route('logout')"
-                      method="post"
+                      :href="route('seller.index')"
+                      method="get"
                       as="button"
                     >
                       Seller / Vendor

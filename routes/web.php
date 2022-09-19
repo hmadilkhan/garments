@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\DesignController;
+use App\Http\Controllers\DimensionController;
+use App\Http\Controllers\FabricTypeController;
+use App\Http\Controllers\SellerController;
+use App\Http\Controllers\UnitController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -17,12 +21,13 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->route("login");
+    // return Inertia::render('Welcome', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
 });
 
 Route::get('/dashboard', function () {
@@ -30,5 +35,9 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource("design",DesignController::class);
+Route::resource("fabric-type",FabricTypeController::class);
+Route::resource("unit",UnitController::class);
+Route::resource("dimension",DimensionController::class);
+Route::resource("seller",SellerController::class);
 
 require __DIR__.'/auth.php';

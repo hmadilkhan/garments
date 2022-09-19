@@ -46,4 +46,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Design::class);
     }
+
+    public function dimension()
+    {
+        return $this->hasMany(Dimension::class);
+    }
+
+    public function unit()
+    {
+        return $this->hasMany(Unit::class);
+    }
+
+    public function fabricType()
+    {
+        return $this->hasMany(FabricType::class);
+    }
+
+    public function seller()
+    {
+        return $this->hasMany(Seller::class);
+    }
 }

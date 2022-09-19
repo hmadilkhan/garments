@@ -54,7 +54,7 @@ class DesignController extends Controller
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
-        
+
     }
 
     /**
@@ -90,7 +90,6 @@ class DesignController extends Controller
      */
     public function update(Request $request, Design $design)
     {
-        return $request->code;
         $validated = $request->validate([
             'code' => 'required',
             'qty' => 'required',
@@ -99,11 +98,7 @@ class DesignController extends Controller
         ]);
         try {
             $fileData = $this->uploads($request->image,'design/');
-            if ($request->file) {
-                $data = array_merge($validated,["image" => (!empty($fileData) ? $fileData["fileName"] : "")]);
-            }else{
-                $data = $validated;
-            }
+            $data = array_merge($validated,["image" => (!empty($fileData) && $fileData["fileName"] != "" ? $fileData["fileName"] : $request->prevImage)]);
             $design->update($data);
             return redirect()->route("design.index");
         } catch (\Throwable $th) {
