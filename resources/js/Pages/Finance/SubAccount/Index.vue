@@ -7,7 +7,7 @@ import feather from "feather-icons";
 import { useForm, Link, Head } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 
-defineProps(["fabricTypes"]);
+defineProps(["subAccounts","mainAccounts"]);
 
 
 let isUpdate = ref(false);
@@ -23,15 +23,14 @@ onMounted(() => {
 
 const form = useForm({
   id: "",
-  fabric: "",
-  type: "",
-  color: "",
+  main_account_id: "",
+  code: "",
+  title: "",
 });
 
 function submit() {
-    console.log(isUpdate.value);
     if (isUpdate.value == true) {
-        Inertia.put(route("fabric-type.update",form.id),form,{
+        Inertia.put(route("sub-account.update",form.id),form,{
         onSuccess: () => {
             form.reset()
             feather.replace()
@@ -40,7 +39,7 @@ function submit() {
 
     });
     }else{
-        Inertia.post(route("fabric-type.store"),form,{
+        Inertia.post(route("sub-account.store"),form,{
             onSuccess: () => {
                 form.reset()
                 feather.replace()
@@ -51,16 +50,16 @@ function submit() {
 
 
 }
-function edit(id,fabric,type,color) {
+function edit(id,main_account_id,code,title) {
     this.form.id = id;
-    this.form.fabric = fabric;
-    this.form.type = type;
-    this.form.color = color;
+    this.form.main_account_id = main_account_id;
+    this.form.code = code;
+    this.form.title = title;
     changeUpdate(true)
 }
 
 function deleteUnit(id) {
-    Inertia.delete(route("fabric-type.destroy",id))
+    Inertia.delete(route("sub-account.destroy",id))
 }
 function cancel(){
     form.reset();
@@ -68,12 +67,12 @@ function cancel(){
 }
 </script>
  <template>
- <Head title="Fabric Type List" />
+ <Head title="Sellers List" />
  <AuthenticatedLayout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Fabric Types
-      </h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Sub Accounts List
+        </h2>
     </template>
     <div class="py-6">
       <div class="sm:px-6 lg:px-8">
@@ -83,7 +82,7 @@ function cancel(){
         >
           <div class="flex flex-wrap -mx-3 mb-6">
             <input type="hidden" v-model="form.id"/>
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+             <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
                 class="
                   block
@@ -95,11 +94,9 @@ function cancel(){
                 "
                 for="grid-first-name"
               >
-                Fabric
+                Main Account
               </label>
-              <input
-                v-model="form.fabric"
-                class="
+              <select v-model="form.main_account_id" class="
                   appearance-none
                   block
                   w-full
@@ -111,13 +108,11 @@ function cancel(){
                   mb-3
                   leading-tight
                   focus:outline-none focus:bg-white
-                "
-                id="grid-first-name"
-                type="text"
-                placeholder="Fabric"
-              />
+                ">
+                <option v-for="mainAccount in mainAccounts" :key="mainAccount.id"  :value="mainAccount.id">{{mainAccount.title}}</option>
+              </select>
               <InputError
-                :message="form.errors.fabric"
+                :message="form.errors.main_account_id"
                 class="mt-2 text-red-500 text-xs italic"
               />
             </div>
@@ -133,10 +128,10 @@ function cancel(){
                 "
                 for="grid-first-name"
               >
-                Fabric Type
+                Code
               </label>
               <input
-                v-model="form.type"
+                v-model="form.code"
                 class="
                   appearance-none
                   block
@@ -152,10 +147,10 @@ function cancel(){
                 "
                 id="grid-first-name"
                 type="text"
-                placeholder="Type"
+                placeholder="Account Code"
               />
               <InputError
-                :message="form.errors.type"
+                :message="form.errors.code"
                 class="mt-2 text-red-500 text-xs italic"
               />
             </div>
@@ -171,10 +166,10 @@ function cancel(){
                 "
                 for="grid-first-name"
               >
-                Fabric Color
+                Title
               </label>
               <input
-                v-model="form.color"
+                v-model="form.title"
                 class="
                   appearance-none
                   block
@@ -190,13 +185,15 @@ function cancel(){
                 "
                 id="grid-first-name"
                 type="text"
-                placeholder="Color"
+                placeholder="Account Title"
               />
               <InputError
-                :message="form.errors.color"
+                :message="form.errors.title"
                 class="mt-2 text-red-500 text-xs italic"
               />
             </div>
+
+
             <div class="w-full md:w-1/2 px-3 mt-3 md:mb-0">
             </div>
             <div class="w-full md:w-1/2 px-3 mt-3 md:mb-0">
@@ -212,29 +209,38 @@ function cancel(){
           <table class="table table-report -mt-2">
             <thead>
               <tr>
-                <th class="text-center whitespace-nowrap">FABRIC</th>
-                <th class="text-center whitespace-nowrap">FABRIC TYPE</th>
-                <th class="text-center whitespace-nowrap">FABRIC COLOR</th>
+                <th class="text-center whitespace-nowrap">MAIN ACCOUNT</th>
+                <th class="text-center whitespace-nowrap">ACCOUNT CODE</th>
+                <th class="text-center whitespace-nowrap">ACCOUNT TITLE</th>
+                <th class="text-center whitespace-nowrap">BALANCE</th>
                 <th class="text-center whitespace-nowrap">ACTIONS</th>
               </tr>
             </thead>
             <tbody>
-                <tr v-for="fabric in fabricTypes" :key="fabric.id" class="intro-x">
-                    <td class="text-center">{{ fabric.fabric }}</td>
-                    <td class="text-center">{{ fabric.type }}</td>
-                    <td class="text-center">{{ fabric.color }}</td>
+                <tr v-for="account in subAccounts" :key="account.id" class="intro-x">
+                    <td class="text-center">{{ account.mainaccounttitle }} ({{account.maincode}})</td>
+                    <td class="text-center">{{ account.code }}</td>
+                    <td class="text-center">{{ account.title }}</td>
+                    <td class="text-center">{{ (account.balance).toLocaleString() }}</td>
                     <td class="table-report__action w-56">
                   <div class="flex justify-center items-center">
                     <a
+                      class="flex items-center mr-3 text-success cursor-pointer"
+                      :href="route('ledger.index',account.id)"
+                    >
+                      <i data-feather="book" class="w-4 h-4 mr-1"></i>
+                      Ledger
+                    </a>
+                    <a
                       class="flex items-center mr-3 cursor-pointer"
-                      @click="edit(fabric.id,fabric.fabric,fabric.type,fabric.color)"
+                      @click="edit(account.id,account.main_account_id,account.code,account.title)"
                     >
                       <i data-feather="check-square" class="w-4 h-4 mr-1"></i>
                       Edit
                     </a>
                     <a
                       class="flex items-center text-danger cursor-pointer"
-                      @click="deleteUnit(fabric.id)"
+                      @click="deleteUnit(account.id)"
                     >
                       <i data-feather="trash-2" class="w-4 h-4 mr-1"></i>
                       Delete

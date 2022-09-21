@@ -66,6 +66,11 @@ function cancel(){
  <template>
   <Head title="Units List" />
   <AuthenticatedLayout>
+    <template #header>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        Units List
+      </h2>
+    </template>
     <div class="py-6">
       <div class="sm:px-6 lg:px-8">
         <form

@@ -3,6 +3,10 @@
 use App\Http\Controllers\DesignController;
 use App\Http\Controllers\DimensionController;
 use App\Http\Controllers\FabricTypeController;
+use App\Http\Controllers\Finance\LedgerController;
+use App\Http\Controllers\Finance\MainAccountController;
+use App\Http\Controllers\Finance\SubAccountController;
+use App\Http\Controllers\Finance\VoucherController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Foundation\Application;
@@ -39,5 +43,11 @@ Route::resource("fabric-type",FabricTypeController::class);
 Route::resource("unit",UnitController::class);
 Route::resource("dimension",DimensionController::class);
 Route::resource("seller",SellerController::class);
+Route::resource("main-account",MainAccountController::class);
+Route::resource("sub-account",SubAccountController::class);
+Route::resource("voucher",VoucherController::class);
+
+Route::get("ledger/{id}",[LedgerController::class,'index'])->name("ledger.index");
+Route::post("ledger/store",[LedgerController::class,'store'])->name("ledger.store");
 
 require __DIR__.'/auth.php';

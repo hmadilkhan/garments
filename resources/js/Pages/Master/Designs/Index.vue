@@ -18,6 +18,11 @@ function deleteDesign(event) {}
   <Head title="Design List" />
 
   <AuthenticatedLayout>
+    <template #header>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Designs List
+        </h2>
+    </template>
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <Link

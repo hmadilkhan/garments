@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Finance\MainAccount;
+use App\Models\Finance\SubAccount;
 use App\Models\Seller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class SellerController extends Controller
@@ -15,7 +18,9 @@ class SellerController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Master/Sellers/Index");
+        return Inertia::render("Master/Sellers/Index", [
+            "sellers" => Seller::paginate(),
+        ]);
     }
 
     /**
@@ -36,7 +41,27 @@ class SellerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+        ]);
+        DB::beginTransaction();
+        try {
+            Seller::create($request->except(["id"]));
+            $mainAccount = MainAccount::where("title", "Payables")->first();
+            $subAccount = SubAccount::where("main_account_id", $mainAccount->id)->count();
+            SubAccount::create([
+                "user_id" => auth()->user()->id,
+                "main_account_id" => $mainAccount->id,
+                "code" => $mainAccount->code + ($subAccount + 1),
+                "title" => $request->name,
+            ]);
+            DB::commit();
+            return redirect()->route("seller.index");
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
     }
 
     /**
@@ -70,7 +95,16 @@ class SellerController extends Controller
      */
     public function update(Request $request, Seller $seller)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+        ]);
+        try {
+            $seller->update($request->except(["id"]));
+            return redirect()->route("seller.index");
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     /**
@@ -81,6 +115,11 @@ class SellerController extends Controller
      */
     public function destroy(Seller $seller)
     {
-        //
+        try {
+            $seller->delete();
+            return redirect()->route("seller.index");
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }

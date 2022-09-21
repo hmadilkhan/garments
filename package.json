@@ -20,6 +20,7 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "@mertefecerit/vuetable": "^1.0.19",
         "feather-icons": "^4.29.0",
         "vue3-easy-data-table": "^1.4.19"
     }

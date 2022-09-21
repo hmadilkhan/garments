@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Finance\AccountType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -17,8 +18,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            UserTypeSeeder::class,
-            UserSeeder::class,
+            // UserTypeSeeder::class,
+            // UserSeeder::class,
+            AccountTypeSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 
