@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('sellers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("sub_account_id")->constrained()->cascadeOnDelete();
             $table->string("name");
             $table->string("phone");
             $table->string("address")->nullable();

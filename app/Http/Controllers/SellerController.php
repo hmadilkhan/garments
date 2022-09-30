@@ -19,7 +19,7 @@ class SellerController extends Controller
     public function index()
     {
         return Inertia::render("Master/Sellers/Index", [
-            "sellers" => Seller::paginate(),
+            "sellers" => Seller::with("subaccount")->paginate(10),
         ]);
     }
 
@@ -47,15 +47,16 @@ class SellerController extends Controller
         ]);
         DB::beginTransaction();
         try {
-            Seller::create($request->except(["id"]));
             $mainAccount = MainAccount::where("title", "Payables")->first();
             $subAccount = SubAccount::where("main_account_id", $mainAccount->id)->count();
-            SubAccount::create([
+            $subAccountResult = SubAccount::create([
                 "user_id" => auth()->user()->id,
                 "main_account_id" => $mainAccount->id,
                 "code" => $mainAccount->code + ($subAccount + 1),
                 "title" => $request->name,
             ]);
+            $data = array_merge($request->except(["id"]),["sub_account_id" => $subAccountResult->id]);
+            Seller::create($data );
             DB::commit();
             return redirect()->route("seller.index");
         } catch (\Throwable $th) {
@@ -101,6 +102,7 @@ class SellerController extends Controller
         ]);
         try {
             $seller->update($request->except(["id"]));
+            SubAccount::where("id",$request->subaccountId)->update(["title" => $request->name]);
             return redirect()->route("seller.index");
         } catch (\Throwable $th) {
             //throw $th;

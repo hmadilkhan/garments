@@ -11,7 +11,7 @@ import { Inertia } from "@inertiajs/inertia";
 
 
 const props = defineProps(["sellers"]);
-console.log(props.sellers);
+console.log(props.sellers.links.length);
 
 
 let isUpdate = ref(false);
@@ -25,6 +25,7 @@ onMounted(() => {
     feather.replace();
 });
 
+
 const form = useForm({
   id: "",
   name: "",
@@ -33,32 +34,30 @@ const form = useForm({
   bank_name: "",
   account_no: "",
   bank: "",
+  subaccountId: "",
 });
 
 function submit() {
-    console.log(isUpdate.value);
     if (isUpdate.value == true) {
-        Inertia.put(route("seller.update",form.id),form,{
+        form.put(route("seller.update",form.id),{
         onSuccess: () => {
             form.reset()
             feather.replace()
             changeUpdate(false)
         },
-
     });
     }else{
-        Inertia.post(route("seller.store"),form,{
+        form.post(route("seller.store"),{
             onSuccess: () => {
-                form.reset()
-                feather.replace()
+                form.reset();
+                feather.replace();
             },
-
         });
     }
 
 
 }
-function edit(id,name,phone,address,bank_name,account_no,bank) {
+function edit(id,name,phone,address,bank_name,account_no,bank,subAccountId) {
     this.form.id = id;
     this.form.name = name;
     this.form.phone = phone;
@@ -66,6 +65,7 @@ function edit(id,name,phone,address,bank_name,account_no,bank) {
     this.form.bank_name = bank_name;
     this.form.account_no = account_no;
     this.form.bank = bank;
+    this.form.subaccountId = subAccountId;
     changeUpdate(true)
 }
 
@@ -369,6 +369,7 @@ function cancel(){
             <thead>
               <tr>
                 <th class="text-center whitespace-nowrap">SELLER</th>
+                <th class="text-center whitespace-nowrap">SYSTEM ACCOUNT NAME</th>
                 <th class="text-center whitespace-nowrap">PHONE</th>
                 <th class="text-center whitespace-nowrap">ADDRESS</th>
                 <th class="text-center whitespace-nowrap">BANK NAME</th>
@@ -380,6 +381,7 @@ function cancel(){
             <tbody>
                 <tr v-for="seller in sellers.data" :key="seller.id" class="intro-x">
                     <td class="text-center">{{ seller.name }}</td>
+                    <td class="text-center">{{ seller.subaccount.title }}</td>
                     <td class="text-center">{{ seller.phone }}</td>
                     <td class="text-center">{{ seller.address }}</td>
                     <td class="text-center">{{ seller.bank_name }}</td>
@@ -389,7 +391,7 @@ function cancel(){
                   <div class="flex justify-center items-center">
                     <a
                       class="flex items-center mr-3 cursor-pointer"
-                      @click="edit(seller.id,seller.name,seller.phone,seller.address,seller.bank_name,seller.account_no,seller.bank)"
+                      @click="edit(seller.id,seller.name,seller.phone,seller.address,seller.bank_name,seller.account_no,seller.bank,seller.subaccount.id)"
                     >
                       <i data-feather="check-square" class="w-4 h-4 mr-1"></i>
                       Edit
@@ -408,6 +410,7 @@ function cancel(){
           </table>
           <pagination class="mt-6" :links="sellers.links" />
        </div>
+
     </div>
   </AuthenticatedLayout>
  </template>

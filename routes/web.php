@@ -35,6 +35,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
+    bcrypt("1234");
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
